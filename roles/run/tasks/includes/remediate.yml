@@ -3,7 +3,7 @@
   ansible.builtin.include_role:
     name: network.base.resource_manager
   vars:
-    action: 'remediate'
-    state: 'replaced'
+    action: "remediate"
+    state: "replaced"
     resources:
-      - 'acls'
+      - "acls"
