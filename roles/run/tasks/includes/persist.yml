@@ -25,6 +25,7 @@
   vars:
     action: "persist"
     resources:
-      - "acls"
+      - acl_interfaces
+      - acls
     persist_empty: "{{ ignore_empty }}"
     inventory_directory: "{{ inventory }}"

@@ -5,4 +5,5 @@
   vars:
     action: "gather"
     resources:
-      - "acls"
+      - acl_interfaces
+      - acls

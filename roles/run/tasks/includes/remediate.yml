@@ -6,4 +6,5 @@
     action: "remediate"
     state: "replaced"
     resources:
-      - "acls"
+      - acl_interfaces
+      - acls

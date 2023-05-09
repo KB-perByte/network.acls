@@ -1,0 +1,7 @@
+---
+- name: Parse acls summary
+  ansible.utils.cli_parse:
+    command: ""
+    parser:
+      name: ansible.netcommon.content_templates
+    set_fact: acls_health

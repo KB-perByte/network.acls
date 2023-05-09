@@ -6,4 +6,5 @@
     action: "detect"
     state: "replaced"
     resources:
-      - "acls"
+      - acl_interfaces
+      - acls
