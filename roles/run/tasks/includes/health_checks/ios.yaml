@@ -1,7 +1,7 @@
 ---
 - name: Parse acls summary
   ansible.utils.cli_parse:
-    command: "show ip interface | include is up|is administratively|is down|Outgoing|Inbound "
+    command: "show ip interface | include is up|is administratively|is down|Outgoing|Inbound"
     parser:
       name: ansible.netcommon.content_templates
     set_fact: acls_health
