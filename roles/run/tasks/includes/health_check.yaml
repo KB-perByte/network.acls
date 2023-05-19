@@ -1,10 +1,15 @@
 ---
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: "{{ ansible_network_os.split('.')[2] }}"
+    verbosity: 2
+
 - name: Include tasks
   ansible.builtin.include_tasks: ./health_checks/{{ ansible_network_os.split('.')[2] }}.yaml
 
 - name: Set health checks fact
   ansible.builtin.set_fact:
-    health_checks: "{{ resource_health | health_check_view(item) }}"
+    health_checks: "{{ acls_health | network.acls.health_check_view(item) }}"
 
 - name: Resource health checks
   ansible.builtin.debug:

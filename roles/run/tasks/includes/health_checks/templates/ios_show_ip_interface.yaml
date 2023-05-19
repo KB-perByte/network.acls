@@ -1,0 +1,31 @@
+# fmt: off
+[
+  {
+    "name": "name", # GigabitEthernet1 is up, line protocol is up
+    "getval": '''^(?P<name>\S+)\sis(\sadministratively)?(\s(?P<status>\S+),)''',
+    "result":
+      { "{{ name }}": { "name": "{{ name }}", "status": "{{ status }}" } },
+    "shared": True,
+  },
+  {
+    "name": "inbound_not_set", # \sInbound  access list is not set
+    "getval": '''\s+Inbound\s+access\slist\sis\snot\sset''',
+    "result": { "{{ name }}": {} },
+  },
+  {
+    "name": "outbound_not_set", # \sOutgoing access list is not set
+    "getval": '''\s+Outgoing\s+access\slist\sis\snot\sset''',
+    "result": { "{{ name }}": {} },
+  },
+  {
+    "name": "inbound", # \sInbound  access list is testInbound
+    "getval": '''\s+Inbound\s+access\slist\sis\s(?P<inbound>\S+)''',
+    "result": { "{{ name }}": { "inbound": "{{ inbound }}" } },
+  },
+  {
+    "name": "outbound", # \sOutgoing access list is testOutbound
+    "getval": '''\s+Outgoing\s+access\slist\sis\s(?P<outbound>\S+)''',
+    "result": { "{{ name }}": { "outbound": "{{ outbound }}" } },
+  },
+]
+# fmt: on
