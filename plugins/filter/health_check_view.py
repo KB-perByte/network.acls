@@ -17,87 +17,142 @@ DOCUMENTATION = """
 """
 
 EXAMPLES = r"""
-- name: health_check
-  vars:
-    checks:
-    - name: all_neighbors_up
-      ignore_errors: true
-    - name: all_neighbors_down
-      ignore_errors: true
-    - name: min_neighbors_up
-      min_count: 1
-    - name: bgp_status_summary
+# ACLs configuration in device
 
-- ansible.builtin.set_fact:
-    bgp_health:
-      bgp_table_version: 3
-      local_as: 500
-      neighbors:
-      - bgp_table_version: 3
-        input_queue: 0
-        msg_rcvd: 52076
-        msg_sent: 52111
-        output_queue: 0
-        peer: 12.0.0.1
-        peer_as: 500
-        peer_state: 1
-        uptime: 4w4d
-        version: 4
+# Router#sh access-lists
+# Standard IP access list 2
+#     30 permit 172.16.1.11
+#     20 permit 172.16.1.10
+#     10 permit 172.16.1.2
+# Extended IP access list 101
+#     15 permit tcp any host 172.16.2.9
+#     18 permit tcp any host 172.16.2.11
+#     20 permit udp host 172.16.1.21 any
+#     30 permit udp host 172.16.1.22 any
+#     40 deny icmp any 10.1.1.0 0.0.0.255 echo
+#     50 permit ip any 10.1.1.0 0.0.0.255
+#     60 permit tcp any host 10.1.1.1 eq telnet
+#     70 permit tcp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255 eq telnet time-range EVERYOTHERDAY (active)
+# Extended IP access list DNB-SNMP
+#     10 permit ip host 10.0.1.1 any
+#     20 permit ip host 10.0.1.2 any
+#     30 permit ip host 10.0.1.3 any
+#     40 deny ip any any log
+# Extended IP access list acl_123
+#     10 permit tcp any any eq 22
+#     21 permit tcp host 192.168.11.8 host 192.168.20.5 eq 22
+#     30 deny ip any any
+# Extended IP access list google_block
+#     10 deny ip any host 8.8.8.8
+# Extended IP access list outboundfilters
+#     10 permit icmp 10.1.1.0 0.0.0.255 172.16.1.0 0.0.0.255
+# Extended IP access list test
+#     10 permit ip host 10.2.2.2 host 10.3.3.3
+#     20 permit tcp host 10.1.1.1 host 10.5.5.5 eq www
+#     30 permit icmp any any
+#     40 permit udp host 10.6.6.6 10.10.10.0 0.0.0.255 eq domain
 
-      - bgp_table_version: 1
-        input_queue: 0
-        msg_rcvd: 0
-        msg_sent: 0
-        output_queue: 0
-        peer: "23.0.0.1"
-        peer_as: 500,
-        peer_state: "Idle"
-        uptime: "never"
-        version: 4
-      path:
-        memory_usage: 288
-        total_entries: 2
-      route_table_version: 3
-      router_id: "192.168.255.229"
+# INTERFACEs configuration in device
 
-- name: Set health checks fact
-  ansible.builtin.set_fact:
-     health_checks: "{{ bgp_health | health_check_view(item) }}"
+# Router#sh ip interface
+# GigabitEthernet1 is up, line protocol is up
+#   Address determined by DHCP
+#   MTU is 1500 bytes
+#   Helper address is not set
+#   Directed broadcast forwarding is disabled
+#   Outgoing Common access list is not set
+#   Outgoing access list is google_block
+#   Inbound Common access list is not set
+#   Inbound  access list is not set
+# GigabitEthernet2 is up, line protocol is up
+#   Helper address is not set
+#   Directed broadcast forwarding is disabled
+#   Outgoing Common access list is not set
+#   Outgoing access list is test
+#   Inbound Common access list is not set
+#   Inbound  access list is acl_123
+#   Proxy ARP is enabled
+# GigabitEthernet3 is administratively down, line protocol is down
+#   Internet protocol processing disabled
+# GigabitEthernet3.100 is administratively down, line protocol is down
+#   Internet protocol processing disabled
+# GigabitEthernet4 is administratively down, line protocol is down
+#   Internet protocol processing disabled
+# Loopback999 is administratively down, line protocol is down
+#   Internet protocol processing disabled
+# Port-channel10 is down, line protocol is down
+#   Internet protocol processing disabled
+# Port-channel20 is down, line protocol is down
+#   Internet protocol processing disabled
+# Port-channel30 is down, line protocol is down
+#   Internet protocol processing disabled
 
-# ok: [192.168.22.43] => {
-#     "failed_when_result": false,
-#     "health_checks": {
-#         "all_neighbors_down": {
-#             "check_status": "unsuccessful",
-#             "down": 1,
-#             "total": 2,
-#             "up": 1
-#         },
-#         "all_neighbors_up": {
-#             "check_status": "unsuccessful",
-#             "down": 1,
-#             "total": 2,
-#             "up": 1
-#         },
-#         "bgp_status_summary": {
-#             "down": 1,
-#             "total": 2,
-#             "up": 1
-#         },
-#         "min_neighbors_up": {
-#             "check_status": "successful",
-#             "down": 1,
-#             "total": 2,
-#             "up": 1
-#         },
-#         "status": "successful"
-#     }
-# }
+- name: Perform ACLs health checks
+  hosts: iosxe
+  gather_facts: false
+  tasks:
+    - name: ACLs health check via ACLs Manager
+      ansible.builtin.include_role:
+        name: network.acls.run
+      vars:
+        actions:
+          - name: health_check
+
+# Task Output:
+# ------------
+#
+# TASK [network.acls.run : Resource health checks]
+#   health_checks:
+#     GigabitEthernet1:
+#       name: GigabitEthernet1
+#       outbound:
+#         acl_type: extended
+#         afi: ipv4
+#         grant: deny
+#         name: google_block
+#         sequence: 10
+#       status: up
+#     GigabitEthernet2:
+#       inbound:
+#         acl_type: extended
+#         afi: ipv4
+#         grant: deny
+#         name: acl_123
+#         sequence: 30
+#       name: GigabitEthernet2
+#       outbound:
+#         acl_type: extended
+#         afi: ipv4
+#         grant: permit
+#         name: test
+#         sequence: 40
+#       status: up
+#     GigabitEthernet3:
+#       name: GigabitEthernet3
+#       status: down
+#     GigabitEthernet3.100:
+#       name: GigabitEthernet3.100
+#       status: down
+#     GigabitEthernet4:
+#       name: GigabitEthernet4
+#       status: down
+#     Loopback999:
+#       name: Loopback999
+#       status: down
+#     Port-channel10:
+#       name: Port-channel10
+#       status: down
+#     Port-channel20:
+#       name: Port-channel20
+#       status: down
+#     Port-channel30:
+#       name: Port-channel30
+#       status: down
 """
 
 RETURN = """
   health_checks:
-    description: BGP health checks
+    description: ACLs health checks
     type: dict
 
 """
@@ -114,9 +169,7 @@ debugpy.wait_for_client()
 
 def health_check_view(*args, **kwargs):
     params = ["acls_facts", "target"]
-    import q
 
-    q("here")
     data = dict(zip(params, args))
     data.update(kwargs)
     if len(data) < 2:
@@ -124,112 +177,36 @@ def health_check_view(*args, **kwargs):
             "Missing either 'health facts' or 'other value in filter input,"
             "refer 'ansible.utils.health_check_view' filter plugin documentation for details",
         )
+    acls_facts = data.get("acls_facts", {})
+    details = {}
+    for intf, intf_details in acls_facts.get("interface_data").items():
+        if intf_details.get("inbound"):
+            intf_details["inbound"] = acls_facts.get("acls_data", {}).get(
+                intf_details.get("inbound")
+            )
+        if intf_details.get("outbound"):
+            intf_details["outbound"] = acls_facts.get("acls_data", {}).get(
+                intf_details.get("outbound")
+            )
+        details[intf] = intf_details
 
-    health_facts = data["health_facts"]
-    target = data["target"]
-    health_checks = {}
-    health_checks["status"] = "successful"
-    if target["name"] == "health_check":
-        vars = target.get("vars")
-        if vars:
-            checks = vars.get("checks")
-            dn_lst = []
-            un_lst = []
-            for item in health_facts["neighbors"]:
-                if item["peer_state"] in ("Established", 1):
-                    item["peer_state"] = "Established"
-                    un_lst.append(item)
-                else:
-                    dn_lst.append(item)
-            stats = {}
-            stats["up"] = len(un_lst)
-            stats["down"] = len(dn_lst)
-            stats["total"] = stats["up"] + stats["down"]
-
-            details = {}
-            data = get_health(checks)
-
-            if data["summary"]:
-                n_dict = {}
-                n_dict.update(stats)
-                if vars.get("details"):
-                    details["neighbors"] = un_lst
-                    n_dict["details"] = details
-                health_checks[data["summary"].get("name")] = n_dict
-
-            if data["all_up"]:
-                n_dict = {}
-                n_dict.update(stats)
-                if vars.get("details"):
-                    details["neighbors"] = un_lst
-                    n_dict["details"] = details
-                n_dict["check_status"] = get_status(stats, "up")
-                if n_dict["check_status"] == "unsuccessful" and not data["all_up"].get(
-                    "ignore_errors"
-                ):
-                    health_checks["status"] = "unsuccessful"
-                health_checks[data["all_up"].get("name")] = n_dict
-
-            if data["all_down"]:
-                n_dict = {}
-                details = {}
-                n_dict.update(stats)
-                if vars.get("details"):
-                    details["neighbors"] = dn_lst
-                    n_dict["details"] = details
-                n_dict["check_status"] = get_status(stats, "down")
-                if n_dict["check_status"] == "unsuccessful" and not data["all_down"].get(
-                    "ignore_errors"
-                ):
-                    health_checks["status"] = "unsuccessful"
-                health_checks[data["all_down"].get("name")] = n_dict
-
-            if data["min_up"]:
-                n_dict = {}
-                details = {}
-                n_dict.update(stats)
-                if vars.get("details"):
-                    details["neighbors"] = un_lst
-                    n_dict["details"] = details
-                n_dict["check_status"] = get_status(stats, "min", data["min_up"]["min_count"])
-                if n_dict["check_status"] == "unsuccessful" and not data["min_up"].get(
-                    "ignore_errors"
-                ):
-                    health_checks["status"] = "unsuccessful"
-                health_checks[data["min_up"].get("name")] = n_dict
-        else:
-            health_checks = health_facts
-    return health_checks
+    return details
 
 
 def get_status(stats, check, count=None):
-    if check in ("up", "down"):
-        return "successful" if stats["total"] == stats[check] else "unsuccessful"
-    else:
-        return "successful" if count <= stats["up"] else "unsuccessful"
+    pass
 
 
 def get_ignore_status(item):
-    if not item.get("ignore_errors"):
-        item["ignore_errors"] = False
-    return item
+    pass
 
 
 def is_present(health_checks, option):
-    for item in health_checks:
-        if item["name"] == option:
-            return get_ignore_status(item)
-    return None
+    pass
 
 
 def get_health(checks):
-    dict = {}
-    dict["summary"] = is_present(checks, "bgp_status_summary")
-    dict["all_up"] = is_present(checks, "all_neighbors_up")
-    dict["all_down"] = is_present(checks, "all_neighbors_down")
-    dict["min_up"] = is_present(checks, "min_neighbors_up")
-
-    return dict
+    pass
 
 
 class FilterModule(object):
@@ -237,7 +214,4 @@ class FilterModule(object):
 
     def filters(self):
         """a mapping of filter names to functions"""
-        import q
-
-        q("here")
         return {"health_check_view": health_check_view}

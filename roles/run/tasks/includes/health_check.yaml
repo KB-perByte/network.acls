@@ -1,9 +1,4 @@
 ---
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: "{{ ansible_network_os.split('.')[2] }}"
-    verbosity: 2
-
 - name: Include tasks
   ansible.builtin.include_tasks: ./health_checks/{{ ansible_network_os.split('.')[2] }}.yaml
 

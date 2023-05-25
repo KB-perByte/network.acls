@@ -1,0 +1,21 @@
+# fmt: off
+[
+  {
+      "name": "acls_name",
+      "getval": '''^(?P<acl_type>Standard|Extended|Reflexive)\s(?P<afi>IP|IPv6)\saccess\slist\s(?P<acl_name>.+)$''',
+      "result": {
+          "{{ acl_name|d() }}": {
+              "name": "{{ acl_name }}",
+              "acl_type": "{{ acl_type.lower() if acl_type is defined }}",
+              "afi": "{{ 'ipv4' if afi == 'IP' else 'ipv6' }}",
+          },
+      },
+      "shared": True,
+  },
+  {
+    "name": "aces", # \sInbound  access list is testInbound
+    "getval": '''\s*(?P<sequence>\d+)\s(?P<grant>deny|permit)?.+''',
+    "result": { "{{ acl_name }}": { "grant": "{{ grant }}", "sequence": "{{ sequence }}"  } },
+  },
+]
+# fmt: on
