@@ -178,19 +178,18 @@ def health_check_view(*args, **kwargs):
             "refer 'ansible.utils.health_check_view' filter plugin documentation for details",
         )
     acls_facts = data.get("acls_facts", {})
-    details = {}
-    for intf, intf_details in acls_facts.get("interface_data").items():
-        if intf_details.get("inbound"):
-            intf_details["inbound"] = acls_facts.get("acls_data", {}).get(
-                intf_details.get("inbound")
-            )
-        if intf_details.get("outbound"):
-            intf_details["outbound"] = acls_facts.get("acls_data", {}).get(
-                intf_details.get("outbound")
-            )
-        details[intf] = intf_details
 
-    return details
+    if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
+        details = {}
+        for intf, intf_details in acls_facts.get("interface_data").items():
+            for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
+                if intf_details.get(direction):
+                    intf_details[direction] = acls_facts.get("acls_data", {}).get(
+                        intf_details.get(direction)
+                    )
+            details[intf] = intf_details
+
+        return details
 
 
 def get_status(stats, check, count=None):

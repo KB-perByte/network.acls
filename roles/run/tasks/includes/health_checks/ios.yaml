@@ -2,9 +2,10 @@
 - name: Parse interface details per interface
   ansible.utils.cli_parse:
     # command: "show ip interface | include is up|is administratively|is down|Outgoing|Inbound"
-    command: "show ip interface"
+    command: "show running-config | section ^interface"
     parser:
       name: ansible.netcommon.content_templates
+      template_path: "{{ tmplt_path }}/{{ network_os }}_interfaces.yaml"
     set_fact: intf_data
 
 - name: Parse acls summary
@@ -12,6 +13,7 @@
     command: "show access-lists"
     parser:
       name: ansible.netcommon.content_templates
+      template_path: "{{ tmplt_path }}/{{ network_os }}_acls.yaml"
     set_fact: aces_data
 
 - name: Set facts for health check operation

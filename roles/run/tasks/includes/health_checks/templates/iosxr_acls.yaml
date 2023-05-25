@@ -1,8 +1,8 @@
 # fmt: off
 [
   {
-      "name": "acls_name",
-      "getval": '''^(?P<acl_type>Standard|Extended|Reflexive)\s(?P<afi>IP|IPv6)\saccess\slist\s(?P<acl_name>.+)$''',
+      "name": "acls_name", # Extended IP access list 101
+      "getval": '''^(?P<afi>ipv4|ipv6)\saccess-list\s(?P<acl_name>.+)$''',
       "result": {
           "{{ acl_name|d() }}": {
               "name": "{{ acl_name }}",
@@ -13,9 +13,9 @@
       "shared": True,
   },
   {
-    "name": "aces", # \sInbound  access list is testInbound
+    "name": "aces", # \s\s\s40 deny icmp any 10.1.1.0 0.0.0.255 echo
     "getval": '''\s*(?P<sequence>\d+)\s(?P<grant>deny|permit)?.+''',
-    "result": { "{{ acl_name }}": { "grant": "{{ grant }}", "sequence": "{{ sequence }}"  } },
+    "result": { "{{ acl_name }}": {"aces" : { "{{ sequence }}" : "{{ grant }}"} }},
   },
 ]
 # fmt: on
