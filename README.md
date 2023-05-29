@@ -1,4 +1,6 @@
-# Network Acls Collection
+# Network Acls Validated Content
+[![CI](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml/badge.svg?event=schedule)](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml)
+[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7404/badge)](https://bestpractices.coreinfrastructure.org/projects/7404)
 
 This repository contains the `network.acls` Ansible Collection.
 
@@ -38,7 +40,7 @@ You can also install a specific version of the collection, for example, if you n
 ansible-galaxy collection install network.acls:==X.Y.Z
 ```
 
-See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+See [Ansible Using Collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
 
 ## Licensing
 

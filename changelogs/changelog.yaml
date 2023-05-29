@@ -1,3 +1,10 @@
-ancestor: null
+---
+ancestor:
 releases:
-  
+  "0.0.1":
+    changes:
+      release_summary: Release 0.0.1 with support for dial-out, health checks, and collector setup.
+    fragments:
+      - basic.yaml
+      - release_summary.yaml
+    release_date: "2023-05-02"
