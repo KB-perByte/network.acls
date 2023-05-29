@@ -1,4 +1,4 @@
-name: Test collection
+name: Test content
 
 concurrency:
   group: ${{ github.head_ref }}
