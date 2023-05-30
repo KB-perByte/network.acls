@@ -1,7 +1,7 @@
 ---
-- name: Parse acls summary
-  ansible.utils.cli_parse:
-    command: "show interfaces"
-    parser:
-      name: ansible.netcommon.content_templates
-    set_fact: acls_health
+- name: Gather resource facts for health check
+  junipernetworks.junos.junos_facts:
+    gather_network_resources:
+      - acl_interfaces
+      - acls
+  register: acls_health
