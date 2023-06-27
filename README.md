@@ -26,8 +26,7 @@ collections:
 ```
 
 **Capabilities**
-- `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls_global, acls_address_family
-  and acls_neighbor_address_family and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
+- `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls and acls_interfaces and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
 - `Acls Resource Management`: Users want to be able to manage the acls and acl_interfaces configurations.
   This also includes the enablement of gathering facts, updating acls resource host-vars, and deploying config onto the appliance.
 - `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls neighborship status with necessary details.
@@ -39,7 +38,7 @@ This platform-agnostic role enables the user to perform acls health checks. User
        `all_unassigned_acls`
        `all_assigned_interfaces`
        `all_unassigned_interfaces`
-- This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls_global and *_acls_address_family network resource modules. The tasks offered by this role can be observed below:
+- This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls and *_acl_interfaces network resource modules. The tasks offered by this role can be observed below:
 
 ### Perform acls Health Checks
 - Health Checks operation fetches the current status of acls Neighborship health.
@@ -71,7 +70,7 @@ health_checks.yml
 
 
 ### Building Brownfield Inventory with Persist
-- Persist operation fetches the acls_global and acls_address_family facts and stores them as host vars.
+- Persist operation fetches the acls and acls_interfaces facts and stores them as host vars.
 The result of a successful Persist operation would be host_vars having YAML formatted resource facts.
 - These host_vars could exist locally or even be published to a remote repository acting as SOT for operations like deploy, remediate, detect, etc.
 
@@ -92,7 +91,7 @@ The result of a successful Persist operation would be host_vars having YAML form
         local: "~/backup/network"
 ```
 
-#### fetch acls resource facts and publish persisted host_vars inventory to GitHub repository.
+#### fetch acls resource facts and publish persisted host_vars inventory to the GitHub repository.
 ```yaml
 - name: Persist the facts into remote data_store which is a github repository
   hosts: rtr1
