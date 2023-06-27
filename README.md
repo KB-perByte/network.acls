@@ -4,7 +4,7 @@ This repository contains the `network.acls` Ansible Collection.
 
 ## Description
 
-The `network.`acls` enables users to manage the acls resources independent of platforms and perform acls health checks.
+The `network.acls` enables users to manage the acls resources independent of platforms and perform acls health checks.
 
 ## Tested with Ansible
 
@@ -27,19 +27,19 @@ collections:
 
 **Capabilities**
 - `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls_global, acls_address_family
-  and acls_neighbor_address_family and save them as host_vars to local or remote data-store which could be used as single SOT for other operations.
-- `acls Resource Management`: Users want to be able to manage the acls global, acls address family and acls neighbor address family configurations.
-  This also includes the enablement of gathering facts, updating acls resource host-vars and deploying config onto the appliance.
-- `acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls neighborship status with necessary details.
+  and acls_neighbor_address_family and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
+- `Acls Resource Management`: Users want to be able to manage the acls and acl_interfaces configurations.
+  This also includes the enablement of gathering facts, updating acls resource host-vars, and deploying config onto the appliance.
+- `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls neighborship status with necessary details.
 - Detect Drift and remediate: This enables users to detect any drift between provided config and running-config and if required then override the running config.
 
 ### Usage
 This platform-agnostic role enables the user to perform acls health checks. Users can perform the following health checks:
-       `all_neigbors_up`
-       `all_neighbors_down`
-       `min_neighbors_up`
-       `acls_status_summary`
-- This role enables users to create a runtime brownfield inventory with all the acls configurations in terms of host vars. These host vars are ansible facts that have been gathered through the *_acls_global and *_acls_address_family network resource modules. The tasks offered by this role could be observed below:
+       `all_assigned_acls`
+       `all_unassigned_acls`
+       `all_assigned_interfaces`
+       `all_unassigned_interfaces`
+- This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls_global and *_acls_address_family network resource modules. The tasks offered by this role can be observed below:
 
 ### Perform acls Health Checks
 - Health Checks operation fetches the current status of acls Neighborship health.
@@ -117,11 +117,11 @@ The result of a successful Persist operation would be host_vars having YAML form
 ```
 
 ### Display Structured Data with Gather
-The gather operation gathers the running-configuration specific to acls, acl_interfaces resources
+- The gather operation gathers the running configuration specific to acls, acl_interfaces resources
   and displays these facts in YAML formatted structures.
 
 ```yaml
-- name: Display acls resources in structured format
+- name: Display acls resources in a structured format
   hosts: rtr1
   gather_facts: false
   tasks:
@@ -154,7 +154,7 @@ The gather operation gathers the running-configuration specific to acls, acl_int
         local: "~/backup/network"
 ```
 
-#### retrieve host_cars from Github repository and deploy changes onto the field.
+#### retrieve host_cars from the Github repository and deploy changes onto the field.
 ```yaml
 - name: retrieve config from github repo and deploy changes
   hosts: rtr1
@@ -199,7 +199,7 @@ The gather operation gathers the running-configuration specific to acls, acl_int
         local: "~/backup/network"
 ```
 
-- Detect operation will read the facts from the Github repository inventory and detect if any configuration diff exists w.r.t running-config.
+- Detect operation will read the facts from the GitHub repository inventory and detect if any configuration diff exists w.r.t running-config.
 
 #### detect the config difference between host_vars in local data_store and running-config.
 ```yaml
