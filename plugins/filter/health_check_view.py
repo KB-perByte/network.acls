@@ -11,9 +11,9 @@ DOCUMENTATION = """
     description:
         - Generate the filtered health check dict based on the provided target.
     options:
-      health_facts:
-        description: Specify the health check dictionary.
-        type: dict
+        health_facts:
+            description: Specify the health check dictionary.
+            type: dict
 """
 
 EXAMPLES = r"""
@@ -161,53 +161,51 @@ from ansible.errors import AnsibleFilterError
 
 ARGSPEC_CONDITIONALS = {}
 
-import debugpy
-
-debugpy.listen(3000)
-debugpy.wait_for_client()
-
 
 def health_check_view(*args, **kwargs):
     params = ["acls_facts", "target"]
 
     data = dict(zip(params, args))
     data.update(kwargs)
+
     if len(data) < 2:
         raise AnsibleFilterError(
             "Missing either 'health facts' or 'other value in filter input,"
             "refer 'ansible.utils.health_check_view' filter plugin documentation for details",
         )
     acls_facts = data.get("acls_facts", {})
-    checks = data.get("target", {}).get("checks")
-
+    # checks = data.get("target", {}).get("checks")
+    details = {
+        "details": {},
+        "status": {},
+        "available_acls": [],
+        "missing_acls": [],
+        "unassigned_acls": [],
+    }
+    present_not_configured_acl = []
+    configured_acls = []
     if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
         acls = list(acls_facts.get("acls_data", {}).keys())
-        details = {}
+
         for intf, intf_details in acls_facts.get("interface_data").items():
             for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
                 if intf_details.get(direction):
+                    if intf_details.get(direction) not in acls:
+                        present_not_configured_acl.append(intf_details.get(direction))
+                    configured_acls.append(intf_details.get(direction))
                     intf_details[direction] = acls_facts.get("acls_data", {}).get(
                         intf_details.get(direction)
                     )
-            details[intf] = intf_details
+            details["details"][intf] = intf_details
+    details["available_acls"] = acls
+    details["missing_acls"] = present_not_configured_acl
+    details["status"] = "successful"
+    details["unassigned_acls"] = list(set(acls) - set(configured_acls))
 
-        return details
+    if present_not_configured_acl:
+        details["status"] = "unsuccessful"
 
-
-def get_status(stats, check, count=None):
-    pass
-
-
-def get_ignore_status(item):
-    pass
-
-
-def is_present(health_checks, option):
-    pass
-
-
-def get_health(checks):
-    pass
+    return details
 
 
 class FilterModule(object):
