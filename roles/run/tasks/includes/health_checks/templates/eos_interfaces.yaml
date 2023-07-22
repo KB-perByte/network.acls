@@ -1,0 +1,30 @@
+# fmt: off
+[
+  {
+    "name": "name", # interface GigabitEthernet2
+    "getval": '''^interface\s(?P<name>\S+)$''',
+    "result": { "{{ name }}": { "name": "{{ name }}" } },
+    "shared": True,
+  },
+  {
+    "name": "inbound", # \s\sipv4 access-group acl_1 ingress
+    "getval": '''\s*ipv4\saccess-group\s(?P<inbound>\S+)\singress''',
+    "result": { "{{ name }}": { "inbound_v4": "{{ inbound }}" } },
+  },
+  {
+    "name": "outbound", # \s\sipv4 access-group acl_2 egress
+    "getval": '''\s*ipv4\saccess-group\s(?P<outbound>\S+)\segress''',
+    "result": { "{{ name }}": { "outbound_v4": "{{ outbound }}" } },
+  },
+  {
+    "name": "inboundv6", # \s\sipv6 access-group acl6_1 ingress
+    "getval": '''\s*ipv6\saccess-group\s(?P<inboundv6>\S+)\singress''',
+    "result": { "{{ name }}": { "inbound_v6": "{{ inboundv6 }}" } },
+  },
+  {
+    "name": "outboundv6", # \s\sipv6 access-group acl6_2 egress
+    "getval": '''\s*ipv6\saccess-group\s(?P<outboundv6>\S+)\segress''',
+    "result": { "{{ name }}": { "outbound_v6": "{{ outboundv6 }}" } },
+  },
+]
+# fmt: on

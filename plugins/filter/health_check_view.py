@@ -88,7 +88,7 @@ EXAMPLES = r"""
 #   Internet protocol processing disabled
 
 - name: Perform ACLs health checks
-  hosts: iosxe
+  hosts: ios
   gather_facts: false
   tasks:
     - name: ACLs health check via ACLs Manager
@@ -102,52 +102,45 @@ EXAMPLES = r"""
 # ------------
 #
 # TASK [network.acls.run : Resource health checks]
+#   failed_when_result: true
 #   health_checks:
-#     GigabitEthernet1:
-#       name: GigabitEthernet1
-#       outbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: deny
-#         name: google_block
-#         sequence: 10
-#       status: up
-#     GigabitEthernet2:
-#       inbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: deny
-#         name: acl_123
-#         sequence: 30
-#       name: GigabitEthernet2
-#       outbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: permit
-#         name: test
-#         sequence: 40
-#       status: up
-#     GigabitEthernet3:
-#       name: GigabitEthernet3
-#       status: down
-#     GigabitEthernet3.100:
-#       name: GigabitEthernet3.100
-#       status: down
-#     GigabitEthernet4:
-#       name: GigabitEthernet4
-#       status: down
-#     Loopback999:
-#       name: Loopback999
-#       status: down
-#     Port-channel10:
-#       name: Port-channel10
-#       status: down
-#     Port-channel20:
-#       name: Port-channel20
-#       status: down
-#     Port-channel30:
-#       name: Port-channel30
-#       status: down
+#     available_acls:
+#     - RM-MCAST-RP
+#     - test-rm
+#     - SNMP
+#     - branchoffices
+#     details:
+#       GigabitEthernet1:
+#         name: GigabitEthernet1
+#         outbound_v4: null
+#       GigabitEthernet2:
+#         inbound_v4: null
+#         name: GigabitEthernet2
+#         outbound_v4: null
+#       GigabitEthernet3:
+#         inbound_v4:
+#           aces:
+#             '10': permit
+#             '20': permit
+#           acl_type: extended
+#           afi: ipv4
+#           name: branchoffices
+#         name: GigabitEthernet3
+#       GigabitEthernet4:
+#         name: GigabitEthernet4
+#       Loopback888:
+#         name: Loopback888
+#       Loopback999:
+#         name: Loopback999
+#     missing_acls:
+#     - google_block
+#     - acl_123
+#     - test
+#     status: unsuccessful
+#     unassigned_acls:
+#     - RM-MCAST-RP
+#     - SNMP
+#     - test-rm
 """
 
 RETURN = """
