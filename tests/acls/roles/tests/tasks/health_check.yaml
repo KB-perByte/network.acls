@@ -1,54 +1,219 @@
 ---
 - name: Set a health facts for the expect health facts
   ansible.builtin.set_fact:
-    acls_health_facts:
-      bgp_table_version: 3
-      local_as: 500
-      neighbors:
-        - bgp_table_version: 3
-          input_queue: 0
-          msg_rcvd: 73271
-          msg_sent: 73233
-          output_queue: 0
-          peer: "12.0.0.1"
-          peer_as: 500
-          peer_state: 1
-          uptime: "6w4d"
-          version: 4
+    tests_acls_health_facts:
+      - acls:
+          - aces:
+              - grant: permit
+                sequence: 10
+                source:
+                  address: 239.0.0.0
+                  wildcard_bits: 0.255.255.255
+            acl_type: standard
+            name: RM-MCAST-RP
+          - aces:
+              - destination:
+                  any: true
+                grant: permit
+                protocol: ip
+                sequence: 10
+                source:
+                  host: 10.10.10.173
+              - destination:
+                  any: true
+                grant: permit
+                protocol: ip
+                sequence: 20
+                source:
+                  host: 10.10.10.182
+              - destination:
+                  any: true
+                grant: permit
+                protocol: ip
+                sequence: 30
+                source:
+                  host: 10.10.10.200
+              - destination:
+                  any: true
+                grant: deny
+                log:
+                  set: true
+                protocol: ip
+                sequence: 40
+                source:
+                  any: true
+            acl_type: extended
+            name: SNMP
+          - aces:
+              - destination:
+                  any: true
+                grant: permit
+                protocol_options:
+                  protocol_number: 22
+                sequence: 10
+                source:
+                  address: 172.16.7.0
+                  wildcard_bits: 0.0.0.3
+              - destination:
+                  host: 172.31.5.4
+                grant: permit
+                protocol: ahp
+                sequence: 20
+                source:
+                  address: 172.16.2.0
+                  wildcard_bits: 0.0.0.255
+            acl_type: extended
+            name: branchoffices
+          - aces:
+              - grant: permit
+                sequence: 10
+                source:
+                  address: 239.0.0.0
+                  wildcard_bits: 0.255.255.255
+              - grant: permit
+                sequence: 20
+                source:
+                  host: any
+              - grant: deny
+                sequence: 30
+                source:
+                  address: 232.0.0.0
+                  wildcard_bits: 0.255.255.255
+            acl_type: standard
+            name: test-rm
+        afi: ipv4
+    tests_acls_interfaces_health_facts:
+      - access_groups:
+          - acls:
+              - direction: out
+                name: google_block
+            afi: ipv4
+        name: GigabitEthernet1
+      - access_groups:
+          - acls:
+              - direction: in
+                name: acl_123
+              - direction: out
+                name: test
+            afi: ipv4
+        name: GigabitEthernet2
+      - access_groups:
+          - acls:
+              - direction: in
+                name: branchoffices
+            afi: ipv4
+        name: GigabitEthernet3
 
-        - bgp_table_version: 1
-          input_queue: 0
-          msg_rcvd: 0
-          msg_sent: 0
-          output_queue: 0
-          peer: "23.0.0.1"
-          peer_as: 500
-          peer_state: "Idle"
-          uptime: "never"
-          version: 4
-      path:
-        memory_usage: 288
-        total_entries: 2
+- name: Apply the base configuration for acls
+  cisco.ios.ios_acls:
+    config: "{{ tests_acls_health_facts }}"
+    state: overridden
 
-      route_table_version: 3
-      router_id: "22.0.0.1"
+- name: Apply the base configuration for acl_interfaces
+  cisco.ios.ios_acl_interfaces:
+    config: "{{ tests_acls_interfaces_health_facts }}"
+    state: overridden
+
+- name: Set a health facts for the expect health facts
+  ansible.builtin.set_fact:
+    tests_acls_combined_data:
+      acls_data:
+        RM-MCAST-RP:
+          aces:
+            "10": permit
+          acl_type: standard
+          afi: ipv4
+          name: RM-MCAST-RP
+        SNMP:
+          aces:
+            "10": permit
+            "20": permit
+            "30": permit
+            "40": deny
+          acl_type: extended
+          afi: ipv4
+          name: SNMP
+        branchoffices:
+          aces:
+            "10": permit
+            "20": permit
+          acl_type: extended
+          afi: ipv4
+          name: branchoffices
+        test-rm:
+          aces:
+            "10": permit
+            "20": permit
+            "30": deny
+          acl_type: standard
+          afi: ipv4
+          name: test-rm
+      interface_data:
+        GigabitEthernet1:
+          name: GigabitEthernet1
+          outbound_v4: google_block
+        GigabitEthernet2:
+          inbound_v4: acl_123
+          name: GigabitEthernet2
+          outbound_v4: test
+        GigabitEthernet3:
+          inbound_v4: branchoffices
+          name: GigabitEthernet3
+        GigabitEthernet4:
+          name: GigabitEthernet4
+        Loopback888:
+          name: Loopback888
+        Loopback999:
+          name: Loopback999
+    tests_health_check:
+      available_acls:
+        - RM-MCAST-RP
+        - test-rm
+        - SNMP
+        - branchoffices
+      details:
+        GigabitEthernet1:
+          name: GigabitEthernet1
+          outbound_v4: null
+        GigabitEthernet2:
+          inbound_v4: null
+          name: GigabitEthernet2
+          outbound_v4: null
+        GigabitEthernet3:
+          inbound_v4:
+            aces:
+              "10": permit
+              "20": permit
+            acl_type: extended
+            afi: ipv4
+            name: branchoffices
+          name: GigabitEthernet3
+        GigabitEthernet4:
+          name: GigabitEthernet4
+        Loopback888:
+          name: Loopback888
+        Loopback999:
+          name: Loopback999
+      missing_acls:
+        - google_block
+        - acl_123
+        - test
+      status: unsuccessful
+      unassigned_acls:
+        - test-rm
+        - SNMP
+        - RM-MCAST-RP
 
 - name: Vars
   ansible.builtin.set_fact:
-    acls_item:
+    tests_acls_item:
       name: "health_check"
-      vars:
-        checks:
-          - name: "all_neighbors_up"
-          - name: "all_neighbors_down"
-          - name: "min_neighbors_up"
-            min_count: 1
 
-- name: Set BGP health facts
+- name: Set ACLs health facts
   ansible.builtin.set_fact:
-    acls_health_facts: "{{ bgp_health | ansible.utils.health_check_view(acls_item) }}"
-
+    tests_acls_health_facts: "{{ tests_acls_combined_data | ansible.utils.health_check_view(tests_acls_item) }}"
+  failed_when: "'FAILED' in command_result.stderr"
 
 - name: Check for accurate facts
   ansible.builtin.assert:
-    that: "{{ acls_health_facts == expected_health_checks }}"
+    that: "{{ tests_acls_health_facts['status'] == tests_health_check['status'] }}"

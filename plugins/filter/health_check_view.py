@@ -11,9 +11,9 @@ DOCUMENTATION = """
     description:
         - Generate the filtered health check dict based on the provided target.
     options:
-      health_facts:
-        description: Specify the health check dictionary.
-        type: dict
+        health_facts:
+            description: Specify the health check dictionary.
+            type: dict
 """
 
 EXAMPLES = r"""
@@ -88,7 +88,7 @@ EXAMPLES = r"""
 #   Internet protocol processing disabled
 
 - name: Perform ACLs health checks
-  hosts: iosxe
+  hosts: ios
   gather_facts: false
   tasks:
     - name: ACLs health check via ACLs Manager
@@ -102,52 +102,45 @@ EXAMPLES = r"""
 # ------------
 #
 # TASK [network.acls.run : Resource health checks]
+#   failed_when_result: true
 #   health_checks:
-#     GigabitEthernet1:
-#       name: GigabitEthernet1
-#       outbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: deny
-#         name: google_block
-#         sequence: 10
-#       status: up
-#     GigabitEthernet2:
-#       inbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: deny
-#         name: acl_123
-#         sequence: 30
-#       name: GigabitEthernet2
-#       outbound:
-#         acl_type: extended
-#         afi: ipv4
-#         grant: permit
-#         name: test
-#         sequence: 40
-#       status: up
-#     GigabitEthernet3:
-#       name: GigabitEthernet3
-#       status: down
-#     GigabitEthernet3.100:
-#       name: GigabitEthernet3.100
-#       status: down
-#     GigabitEthernet4:
-#       name: GigabitEthernet4
-#       status: down
-#     Loopback999:
-#       name: Loopback999
-#       status: down
-#     Port-channel10:
-#       name: Port-channel10
-#       status: down
-#     Port-channel20:
-#       name: Port-channel20
-#       status: down
-#     Port-channel30:
-#       name: Port-channel30
-#       status: down
+#     available_acls:
+#     - RM-MCAST-RP
+#     - test-rm
+#     - SNMP
+#     - branchoffices
+#     details:
+#       GigabitEthernet1:
+#         name: GigabitEthernet1
+#         outbound_v4: null
+#       GigabitEthernet2:
+#         inbound_v4: null
+#         name: GigabitEthernet2
+#         outbound_v4: null
+#       GigabitEthernet3:
+#         inbound_v4:
+#           aces:
+#             '10': permit
+#             '20': permit
+#           acl_type: extended
+#           afi: ipv4
+#           name: branchoffices
+#         name: GigabitEthernet3
+#       GigabitEthernet4:
+#         name: GigabitEthernet4
+#       Loopback888:
+#         name: Loopback888
+#       Loopback999:
+#         name: Loopback999
+#     missing_acls:
+#     - google_block
+#     - acl_123
+#     - test
+#     status: unsuccessful
+#     unassigned_acls:
+#     - RM-MCAST-RP
+#     - SNMP
+#     - test-rm
 """
 
 RETURN = """
@@ -161,53 +154,51 @@ from ansible.errors import AnsibleFilterError
 
 ARGSPEC_CONDITIONALS = {}
 
-import debugpy
-
-debugpy.listen(3000)
-debugpy.wait_for_client()
-
 
 def health_check_view(*args, **kwargs):
     params = ["acls_facts", "target"]
 
     data = dict(zip(params, args))
     data.update(kwargs)
+
     if len(data) < 2:
         raise AnsibleFilterError(
             "Missing either 'health facts' or 'other value in filter input,"
             "refer 'ansible.utils.health_check_view' filter plugin documentation for details",
         )
     acls_facts = data.get("acls_facts", {})
-    checks = data.get("target", {}).get("checks")
-
+    # checks = data.get("target", {}).get("checks")
+    details = {
+        "details": {},
+        "status": {},
+        "available_acls": [],
+        "missing_acls": [],
+        "unassigned_acls": [],
+    }
+    present_not_configured_acl = []
+    configured_acls = []
     if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
         acls = list(acls_facts.get("acls_data", {}).keys())
-        details = {}
+
         for intf, intf_details in acls_facts.get("interface_data").items():
             for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
                 if intf_details.get(direction):
+                    if intf_details.get(direction) not in acls:
+                        present_not_configured_acl.append(intf_details.get(direction))
+                    configured_acls.append(intf_details.get(direction))
                     intf_details[direction] = acls_facts.get("acls_data", {}).get(
                         intf_details.get(direction)
                     )
-            details[intf] = intf_details
+            details["details"][intf] = intf_details
+    details["available_acls"] = acls
+    details["missing_acls"] = present_not_configured_acl
+    details["status"] = "successful"
+    details["unassigned_acls"] = list(set(acls) - set(configured_acls))
 
-        return details
+    if present_not_configured_acl:
+        details["status"] = "unsuccessful"
 
-
-def get_status(stats, check, count=None):
-    pass
-
-
-def get_ignore_status(item):
-    pass
-
-
-def is_present(health_checks, option):
-    pass
-
-
-def get_health(checks):
-    pass
+    return details
 
 
 class FilterModule(object):

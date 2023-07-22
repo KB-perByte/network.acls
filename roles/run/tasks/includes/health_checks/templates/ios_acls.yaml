@@ -1,21 +1,24 @@
 # fmt: off
 [
   {
-      "name": "acls_name", # Extended IP access list 101
-      "getval": '''^(?P<acl_type>Standard|Extended|Reflexive)\s(?P<afi>IP|IPv6)\saccess\slist\s(?P<acl_name>.+)$''',
-      "result": {
-          "{{ acl_name|d() }}": {
-              "name": "{{ acl_name }}",
-              "acl_type": "{{ acl_type.lower() if acl_type is defined }}",
-              "afi": "{{ 'ipv4' if afi == 'IP' else 'ipv6' }}",
+    "name": "acls_name", # Extended IP access list 101
+    "getval": '''^(?P<acl_type>Standard|Extended|Reflexive)\s(?P<afi>IP|IPv6)\saccess\slist\s(?P<acl_name>.+)$''',
+    "result":
+      {
+        "{{ acl_name|d() }}":
+          {
+            "name": "{{ acl_name }}",
+            "acl_type": "{{ acl_type.lower() if acl_type is defined }}",
+            "afi": "{{ 'ipv4' if afi == 'IP' else 'ipv6' }}",
           },
       },
-      "shared": True,
+    "shared": True,
   },
   {
     "name": "aces", # \s\s\s40 deny icmp any 10.1.1.0 0.0.0.255 echo
     "getval": '''\s*(?P<sequence>\d+)\s(?P<grant>deny|permit)?.+''',
-    "result": { "{{ acl_name }}": {"aces" : { "{{ sequence }}" : "{{ grant }}"} }},
+    "result":
+      { "{{ acl_name }}": { "aces": { "{{ sequence }}": "{{ grant }}" } } },
   },
 ]
 # fmt: on
