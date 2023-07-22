@@ -11,4 +11,5 @@ namespace: network
 readme: README.md
 repository: https://github.com/redhat-cop/network.acls
 issues: https://github.com/redhat-cop/network.acls/issues
+tags: [networking]
 version: "0.0.1"
