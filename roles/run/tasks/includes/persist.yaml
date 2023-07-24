@@ -2,7 +2,7 @@
 - name: Resolve target resources
   ansible.builtin.include_tasks: includes/resources.yaml
 
-- name: Invoke gather function
+- name: Invoke persist function
   ansible.builtin.include_role:
     name: network.base.resource_manager
   vars:
