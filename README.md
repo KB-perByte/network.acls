@@ -12,9 +12,31 @@ The `network.acls` enables users to manage the acls resources independent of pla
 Tested with ansible-core 2.15 releases.
 
 ## Installation
+To consume this Validated Content from Automation Hub, the following needs to be added to `ansible.cfg`:
 
 ```
+[galaxy]
+server_list = automation_hub
+
+[galaxy_server.automation_hub]
+url=https://cloud.redhat.com/api/automation-hub/
+auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+token=<SuperSecretToken>
+```
+Get the required token from the [Automation Hub Web UI](https://console.redhat.com/ansible/automation-hub/token).
+
+With this configured, simply run the following commands:
+
+```
+ansible-galaxy collection install network.base
 ansible-galaxy collection install network.acls
+```
+
+#### Install from GitHub
+
+```
+ansible-galaxy collection install git+https://github.com/redhat-cop/network.base
+ansible-galaxy collection install git+https://github.com/redhat-cop/network.acls
 ```
 
 You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
@@ -25,6 +47,7 @@ collections:
   type: git
   version: main
 ```
+
 
 **Capabilities**
 - `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls and acls_interfaces and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
