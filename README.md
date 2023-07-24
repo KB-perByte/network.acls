@@ -14,14 +14,14 @@ Tested with ansible-core 2.15 releases.
 ## Installation
 
 ```
-ansible-galaxy collection install git+https://github.com/redhat-cop/network.acls
+ansible-galaxy collection install network.acls
 ```
 
 You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
 
 ```yaml
 collections:
-- name: https://github.com/redhat-cop/network.acls.git #YTBA
+- name: https://github.com/redhat-cop/network.acls.git
   type: git
   version: main
 ```

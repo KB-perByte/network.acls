@@ -2,8 +2,7 @@
 authors:
   - Sagar Paul (@KB-perByte)
 dependencies:
-  ansible.netcommon: ">=5.0.0"
-  ansible.utils: ">=2.9.0"
+  network.base: "==3.0.0"
 license_file: LICENSE
 name: acls
 description: Ansible Network Acls enables user to manage the Acls resources independent of platforms and perform acls health checks.
