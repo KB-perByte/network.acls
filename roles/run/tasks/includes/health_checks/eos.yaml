@@ -1,7 +1,22 @@
 ---
-- name: Parse acls summary
+- name: Parse interface details per interface
   ansible.utils.cli_parse:
-    command: ""
+    command: "show running-config | include interface | access-group | traffic-filter"
     parser:
       name: ansible.netcommon.content_templates
-    set_fact: acls_health
+      template_path: "{{ tmplt_path }}/{{ network_os }}_interfaces.yaml"
+    set_fact: intf_data
+
+- name: Parse acls summary
+  ansible.utils.cli_parse:
+    command: "show running-config | section access-list"
+    parser:
+      name: ansible.netcommon.content_templates
+      template_path: "{{ tmplt_path }}/{{ network_os }}_acls.yaml"
+    set_fact: aces_data
+
+- name: Set facts for health check operation
+  ansible.builtin.set_fact:
+    acls_health:
+      interface_data: "{{ intf_data }}"
+      acls_data: "{{ aces_data }}"

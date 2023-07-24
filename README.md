@@ -1,4 +1,5 @@
 # Network Acls Validated Content
+[![Test collection](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml)[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7637/badge)](https://bestpractices.coreinfrastructure.org/projects/7637)
 
 This repository contains the `network.acls` Ansible Collection.
 
@@ -8,11 +9,33 @@ The `network.acls` enables users to manage the acls resources independent of pla
 
 ## Tested with Ansible
 
-Tested with ansible-core 2.13 releases.
+Tested with ansible-core 2.15 releases.
 
 ## Installation
+To consume this Validated Content from Automation Hub, the following needs to be added to `ansible.cfg`:
 
 ```
+[galaxy]
+server_list = automation_hub
+
+[galaxy_server.automation_hub]
+url=https://cloud.redhat.com/api/automation-hub/
+auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+token=<SuperSecretToken>
+```
+Get the required token from the [Automation Hub Web UI](https://console.redhat.com/ansible/automation-hub/token).
+
+With this configured, simply run the following commands:
+
+```
+ansible-galaxy collection install network.base
+ansible-galaxy collection install network.acls
+```
+
+#### Install from GitHub
+
+```
+ansible-galaxy collection install git+https://github.com/redhat-cop/network.base
 ansible-galaxy collection install git+https://github.com/redhat-cop/network.acls
 ```
 
@@ -20,29 +43,30 @@ You can also include it in a `requirements.yml` file and install it via `ansible
 
 ```yaml
 collections:
-- name: https://github.com/redhat-cop/network.acls.git #YTBA
+- name: https://github.com/redhat-cop/network.acls.git
   type: git
   version: main
 ```
+
 
 **Capabilities**
 - `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls and acls_interfaces and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
 - `Acls Resource Management`: Users want to be able to manage the acls and acl_interfaces configurations.
   This also includes the enablement of gathering facts, updating acls resource host-vars, and deploying config onto the appliance.
-- `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls neighborship status with necessary details.
+- `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls configuration status with necessary details.
 - Detect Drift and remediate: This enables users to detect any drift between provided config and running-config and if required then override the running config.
 
 ### Usage
 This platform-agnostic role enables the user to perform acls health checks. Users can perform the following health checks:
-       `all_assigned_acls`
-       `all_unassigned_acls`
-       `all_assigned_interfaces`
-       `all_unassigned_interfaces`
+       `available_acls`
+       `details`
+       `missing_acls`
+       `unassigned_acls`
 - This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls and *_acl_interfaces network resource modules. The tasks offered by this role can be observed below:
 
 ### Perform acls Health Checks
-- Health Checks operation fetches the current status of acls Neighborship health.
-- This can also include the details about the acls metrics(state, message received/sent, version, etc).
+- Health Checks operation fetches the current status of acls configuration health.
+- This can also include the details about the acls available, missing (not configured), and unassigned acls.
 
 ```yaml
 health_checks.yml
@@ -58,14 +82,6 @@ health_checks.yml
       ansible_network_os: cisco.ios.ios
       operations:
         - name: health_check
-          vars:
-            details: True
-            checks:
-              - name: all_neighbors_up
-              - name: all_neighbors_down
-                ignore_errors: true
-              - name: min_neighbors_up
-                min_count: 1
 ```
 
 
