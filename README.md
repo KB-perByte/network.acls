@@ -1,5 +1,5 @@
 # Network Acls Validated Content
-[![Test collection](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/ansible-network/network.acls/actions/workflows/tests.yml)[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7637/badge)](https://bestpractices.coreinfrastructure.org/projects/7637)
+[![Test collection](https://github.com/redhat-cop/network.acls/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/redhat-cop/network.acls/actions/workflows/tests.yml)[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7660/badge)](https://bestpractices.coreinfrastructure.org/projects/7660)
 
 This repository contains the `network.acls` Ansible Collection.
 
