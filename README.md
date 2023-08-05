@@ -9,7 +9,7 @@ The `network.acls` enables users to manage the acls resources independent of pla
 
 ## Tested with Ansible
 
-Tested with ansible-core 2.15 releases.
+Tested with ansible-core >=2.15 releases.
 
 ## Installation
 To consume this Validated Content from Automation Hub, the following needs to be added to `ansible.cfg`:
@@ -32,21 +32,11 @@ ansible-galaxy collection install network.base
 ansible-galaxy collection install network.acls
 ```
 
-You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
-
-```yaml
-collections:
-- name: https://github.com/redhat-cop/network.acls.git
-  type: git
-  version: main
-```
-
-
 **Capabilities**
 - `Build Brownfield Inventory`: This enables users to fetch the YAML structured resource module facts for acls resources like acls and acls_interfaces and save them as host_vars to a local or remote data store which could be used as a single SOT for other operations.
 - `Acls Resource Management`: Users want to be able to manage the acls and acl_interfaces configurations.
   This also includes the enablement of gathering facts, updating acls resource host-vars, and deploying config onto the appliance.
-- `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls configuration status with necessary details.
+- `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls configuration status with the necessary details.
 - Detect Drift and remediate: This enables users to detect any drift between provided config and running-config and if required then override the running config.
 
 ### Usage
