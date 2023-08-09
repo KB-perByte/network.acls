@@ -5,6 +5,15 @@ Network Acls Collection Release Notes
 .. contents:: Topics
 
 
+v1.0.1
+======
+
+Documentation Changes
+---------------------
+
+- Update badges to refer to proper Github repository.
+- Update installation process in README.
+
 v1.0.0
 ======
 
