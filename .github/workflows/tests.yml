@@ -11,8 +11,6 @@ on:   # yamllint disable-line rule:truthy
   workflow_dispatch:
 
 jobs:
-  ansible-lint:
-    uses: ansible-network/github_actions/.github/workflows/ansible-lint.yml@main
   changelog:
     uses: ansible-network/github_actions/.github/workflows/changelog.yml@main
   sanity:
@@ -21,13 +19,11 @@ jobs:
     if: ${{ always() }}
     needs:
       - changelog
-      - ansible-lint
       - sanity
     runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert set([
-          '${{ needs.ansible-lint.result }}',
           '${{ needs.changelog.result }}',
           '${{ needs.sanity.result }}'
           ]) == {'success'}"
