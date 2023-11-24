@@ -5,6 +5,14 @@ Network Acls Collection Release Notes
 .. contents:: Topics
 
 
+v1.0.2
+======
+
+Bugfixes
+--------
+
+- Fix eos healtchecks, update regexes to render correct configuration.
+
 v1.0.1
 ======
 
