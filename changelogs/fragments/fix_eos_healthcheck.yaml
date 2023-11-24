@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - "Fix eos healtchecks, update regexes to render correct configuration."
