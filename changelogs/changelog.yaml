@@ -33,7 +33,7 @@ releases:
   1.0.2:
     changes:
       bugfixes:
-        - Fix eos healtchecks, update regexes to render correct configuration.
+        - Fix eos healthchecks, update regexes to render correct configuration.
     fragments:
       - fix_eos_healthcheck.yaml
       - trivial_lint.yaml
