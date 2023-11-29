@@ -15,6 +15,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   changelog:
     uses: ansible-network/github_actions/.github/workflows/changelog.yml@main
+    if: github.event_name == 'pull_request'
   sanity:
     uses: ansible-network/github_actions/.github/workflows/sanity.yml@main
     with:
@@ -96,11 +97,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: >-
-          steps:
-      - run: >-
           python -c "assert 'failure' not in
           set([
-          '${{ needs.ansible-lint.result }}',
           '${{ needs.changelog.result }}',
           '${{ needs.sanity.result }}',
           ])"
