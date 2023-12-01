@@ -9,7 +9,7 @@ The `network.acls` enables users to manage the acls resources independent of pla
 
 ## Tested with Ansible
 
-Tested with ansible-core >=2.15 releases.
+Tested with ansible-core >=2.14 releases.
 
 ## Installation
 To consume this Validated Content from Automation Hub, the following needs to be added to `ansible.cfg`:
@@ -37,7 +37,7 @@ ansible-galaxy collection install network.acls
 - `Acls Resource Management`: Users want to be able to manage the acls and acl_interfaces configurations.
   This also includes the enablement of gathering facts, updating acls resource host-vars, and deploying config onto the appliance.
 - `Acls Health Checks`: Users want to be able to perform health checks for acls applications. These health checks should be able to provide the acls configuration status with the necessary details.
-- Detect Drift and remediate: This enables users to detect any drift between provided config and running-config and if required then override the running config.
+- Detect Drift and remediate: This enables users to detect any drift between the provided config and running-config and if required then override the running config.
 
 ### Usage
 This platform-agnostic role enables the user to perform acls health checks. Users can perform the following health checks:
@@ -223,7 +223,7 @@ The result of a successful Persist operation would be host_vars having YAML form
 ```
 
 #### Remediate configuration drift in acls Configuration
-The remediate operation will read the facts from the locally provided/default inventory and remediate if any configuration changes are there on the appliances using overridden state.
+The remediate operation will read the facts from the locally provided/default inventory and remediate if any configuration changes are there on the appliances using the overridden state.
 
 ```yaml
 - name: Remediate configuration
@@ -241,7 +241,7 @@ The remediate operation will read the facts from the locally provided/default in
         local: "~/backup/network"
 ```
 
-The remediate operation will read the facts from the Github repository and remediate if any configuration changes are there on the appliances using overridden state.
+The remediate operation will read the facts from the Github repository and remediate if any configuration changes are there on the appliances using the overridden state.
 
 ```yaml
 - name: Remediate configuration
