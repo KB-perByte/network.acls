@@ -86,7 +86,7 @@ health_checks.yml
 The result of a successful Persist operation would be host_vars having YAML formatted resource facts.
 - These host_vars could exist locally or even be published to a remote repository acting as SOT for operations like deploy, remediate, detect, etc.
 
-#### - fetch acls resource facts and build local data_store.
+#### fetch acls resource facts and build local data_store.
 ```yaml
 - name: Persist the facts into host vars
   hosts: rtr1
@@ -103,7 +103,7 @@ The result of a successful Persist operation would be host_vars having YAML form
         local: "~/backup/network"
 ```
 
-#### - fetch acls resource facts and publish persisted host_vars inventory to the GitHub repository.
+#### fetch acls resource facts and publish persisted host_vars inventory to the GitHub repository.
 ```yaml
 - name: Persist the facts into remote data_store which is a github repository
   hosts: rtr1
