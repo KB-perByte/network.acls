@@ -14,7 +14,7 @@ This repository contains the `network.acls` Ansible Collection.
 
 ## Requirements
 
-- [Requires Ansible](https://github.com/redhat-cop/network.base/blob/main/meta/runtime.yml)
+- [Requires Ansible](https://github.com/redhat-cop/network.acls/blob/main/meta/runtime.yml)
 - [Requires Content Collections](https://github.com/redhat-cop/network.base/blob/main/galaxy.yml#L5https://forum.ansible.com/c/news/5/none)
 - [Testing Requirements](https://github.com/redhat-cop/network.base/blob/main/test-requirements.txt)
 - Users also need to include platform collections as per their requirements. The supported platform collections are:
