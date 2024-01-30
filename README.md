@@ -282,7 +282,7 @@ The remediate operation will read the facts from the Github repository and remed
 
 The project uses tox to run `ansible-lint` and `ansible-test sanity`.
 Assuming this repository is checked out in the proper structure,
-e.g. `collections_root/ansible_collections/network/backup`, run:
+e.g. `collections_root/ansible_collections/network/acls`, run:
 
 ```shell
   tox -e ansible-lint
