@@ -21,7 +21,7 @@ jobs:
   sanity:
     uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
   all_green:
-    if: ${{ always() }}
+    if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
       - changelog
       - sanity
