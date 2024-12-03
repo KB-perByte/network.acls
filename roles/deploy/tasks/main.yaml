@@ -1,5 +1,5 @@
 ---
-- name: Invoke gather function
+- name: Invoke deploy function
   ansible.builtin.include_role:
     name: network.base.resource_manager
   vars:

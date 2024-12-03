@@ -1,0 +1,17 @@
+---
+- name: Set template path
+  ansible.builtin.set_fact:
+    tmplt_path: "{{ role_path }}/tasks/includes/health_checks/templates"
+    network_os: "{{ ansible_network_os.split('.')[2] }}"
+
+- name: Include tasks
+  ansible.builtin.include_tasks: ./health_checks/{{ network_os }}.yaml
+
+- name: Set health checks fact
+  ansible.builtin.set_fact:
+    health_checks: "{{ acls_health | network.acls.health_check_view(item) }}"
+
+- name: Resource health checks
+  ansible.builtin.debug:
+    var: health_checks
+  failed_when: "'unsuccessful' == health_checks.status"

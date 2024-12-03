@@ -1,0 +1,9 @@
+---
+- name: Invoke gather functionality
+  ansible.builtin.include_role:
+    name: network.base.resource_manager
+  vars:
+    operation: "gather"
+    resources:
+      - acl_interfaces
+      - acls
