@@ -1,0 +1,25 @@
+---
+- name: Debug
+  ansible.builtin.debug:
+    msg: "START network.acls gather operation integration tests on connection={{ ansible_connection }}"
+
+- name: Gather and assertion
+  block:
+    - name: Run network.acls validated content with gather operation
+      ansible.builtin.include_role:
+        name: network.acls.gather
+      vars:
+        operations:
+          - name: gather
+      register: acls_result
+
+    - name: Assert that gather result
+      ansible.builtin.assert:
+        that:
+          - acls_result.changed == false
+        fail_msg: "ACL gather operation indicated changes when it should not"
+        success_msg: "ACL gather operation completed successfully"
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "END network.acls gather operation integration tests on connection={{ ansible_connection }}"

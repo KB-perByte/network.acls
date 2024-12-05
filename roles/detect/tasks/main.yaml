@@ -1,4 +1,8 @@
 ---
-- name: Include tasks
-  ansible.builtin.include_tasks: includes/{{ item.name }}.yaml
-  loop: "{{ operations }}"
+- name: Invoke detect function
+  ansible.builtin.include_role:
+    name: network.base.detect
+  vars:
+    resources:
+      - acl_interfaces
+      - acls
