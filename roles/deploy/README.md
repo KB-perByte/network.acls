@@ -1,20 +1,20 @@
-#Deploy
+# Deploy
 
-##Overview
+## Overview
 The deploy role will read the ACL facts from the provided/default or remote inventory and deploy the changes onto the appliances. It enables users to read the config as host_vars from a local or remote data store and deploy ACL configurations if any changes are found. This role is designed to ensure that access control configurations remain consistent and secure across devices.
 
-##Features
+## Features
 - Read ACL configuration data from local or remote repositories
 - Deploy ACL configurations only when changes are detected
 - Support for integration with Git repositories for version control
 - Maintain consistent access control policies across network infrastructure
 
-##Variables
+## Variables
 
 Variable NameDefault ValueRequiredTypeDescriptionExampleansible_network_os""nostrNetwork OS to be used during deploy."cisco.ios.ios"data_store""yesdictDefines the source of the configurations (local or remote).See usage example below.
 
 
-##Usage
+## Usage
 Below is an example playbook demonstrating how to use the deploy role to retrieve and deploy ACL configurations from a specified repository:
 
 ```yaml
@@ -38,9 +38,9 @@ Below is an example playbook demonstrating how to use the deploy role to retriev
 Example Output
 When the playbook is executed successfully, the output will show the ACL configurations being deployed when output verbosity is debug mode.
 
-##License
+## License
 GNU General Public License v3.0 or later.
 See LICENSE to see the full text.
 
-##Author Information
+## Author Information
 - Ansible Network Content Team
