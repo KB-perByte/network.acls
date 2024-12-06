@@ -1,17 +1,12 @@
 ---
 - name: Debug
   ansible.builtin.debug:
-    msg: "START network.acls deploy role integration tests on connection={{ ansible_connection }}"
+    msg: "START network.acls persist role integration tests on connection={{ ansible_connection }}"
 
-- name: Cleanup, persist, and Deploy
+- name: Cleanup, gather and persist
   block:
     - name: Reset configuration
       ansible.builtin.include_tasks: _cleanup.yaml
-
-    - name: Set local data_store
-      ansible.builtin.set_fact:
-        test_data_store:
-          local: "~/test_backup"
 
     - name: Set resources
       ansible.builtin.set_fact:
@@ -19,23 +14,34 @@
           - "acls"
           - "acl_interfaces"
 
-    - name: Run persist role to gather and save facts
+    - name: Set local data_store
+      ansible.builtin.set_fact:
+        test_data_store:
+          local: "~/test_backup"
+
+    - name: Run network.acls validated content with persist operation
       ansible.builtin.include_role:
         name: network.acls.persist
       vars:
         data_store: "{{ test_data_store }}"
+
+    - name: Assert file generations
+      ansible.builtin.include_tasks: includes/assertions.yaml
+      loop: "{{ test_resources }}"
+      loop_control:
+        loop_var: filename
 
     - name: Run network.acls validated content with deploy operation
       ansible.builtin.include_role:
         name: network.acls.deploy
       vars:
         data_store: "{{ test_data_store }}"
-      register: deploy_result
+      register: persist_result
 
     - name: Assert that result
       ansible.builtin.assert:
         that:
-          - deploy_result.changed == false
+          - persist_result.changed == false
 
   always:
     - name: Reset configuration
@@ -43,4 +49,4 @@
 
 - name: Debug
   ansible.builtin.debug:
-    msg: "END network.acls deploy role integration tests on connection={{ ansible_connection }}"
+    msg: "END network.acls persist role integration tests on connection={{ ansible_connection }}"
