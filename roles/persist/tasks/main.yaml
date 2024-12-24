@@ -4,5 +4,5 @@
     name: network.base.persist
   vars:
     resources:
-      - acl_interfaces
-      - acls
+      - "acl_interfaces"
+      - "acls"

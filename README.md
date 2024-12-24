@@ -60,6 +60,8 @@ This platform-agnostic role enables the user to perform acls health checks. User
        `unassigned_acls`
 - This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls and *_acl_interfaces network resource modules. The tasks offered by this role can be observed below:
 
+
+
 ### Perform acls Health Checks
 - Health Checks operation fetches the current status of acls configuration health.
 - This can also include the details about the acls available, missing (not configured), and unassigned acls.
@@ -307,6 +309,27 @@ junos
 ```shell
   ansible-test network-integration -i /path/to/inventory --python 3.9 [target]
 ```
+## Included content
+
+<!--start collection content-->
+### Filter plugins
+Name | Description
+--- | ---
+[network.acls.health_check_view](https://github.com/redhat-cop/network.acls/blob/main/docs/network.acls.health_check_view_filter.rst)|Generate the filtered health check dict based on the provided target.
+
+<!--end collection content-->
+
+<!--start requires_ansible-->
+## Ansible version compatibility
+
+This collection has been tested against following Ansible versions: **>=2.15.0**.
+
+For collections that support Ansible 2.9, please ensure you update your `network_os` to use the
+fully qualified collection name (for example, `cisco.ios.ios`).
+Plugins and modules within a collection may be tested with only specific Ansible versions.
+A collection may contain metadata that identifies these versions.
+PEP440 is the schema used to describe the versions of Ansible.
+<!--end requires_ansible-->
 
 ## Contributing
 

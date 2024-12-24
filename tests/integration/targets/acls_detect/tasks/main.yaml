@@ -1,0 +1,38 @@
+---
+- name: Debug
+  ansible.builtin.debug:
+    msg: "START network.acls detect role integration tests on connection={{ ansible_connection }}"
+
+- name: Cleanup, persist and detect drift
+  block:
+    - name: Reset configuration
+      ansible.builtin.include_tasks: _cleanup.yaml
+
+    # Then continue with your existing test
+    - name: Set resources
+      ansible.builtin.set_fact:
+        test_resources:
+          - "acls"
+          - "acl_interfaces"
+
+    - name: Set local data_store
+      ansible.builtin.set_fact:
+        test_data_store:
+          local: "~/test_backup"
+
+    - name: Run persist role
+      ansible.builtin.include_role:
+        name: network.acls.persist
+      vars:
+        data_store: "{{ test_data_store }}"
+
+    - name: Run detect role
+      ansible.builtin.include_role:
+        name: network.acls.detect
+      vars:
+        data_store: "{{ test_data_store }}"
+      register: detect_result
+
+  always:
+    - name: Reset configuration
+      ansible.builtin.include_tasks: _cleanup.yaml

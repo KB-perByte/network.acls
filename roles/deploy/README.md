@@ -1,7 +1,7 @@
 # Deploy
 
 ## Overview
-The deploy role will read the ACL facts from the provided/default or remote inventory and deploy the changes onto the appliances. It enables users to read the config as host_vars from a local or remote data store and deploy ACL configurations if any changes are found. This role is designed to ensure that access control configurations remain consistent and secure across devices.
+The `deploy` role will read the ACL facts from the provided/default or remote inventory and deploy the changes onto the appliances. It enables users to read the config as host_vars from a local or remote data store and deploy ACL configurations if any changes are found. This role is designed to ensure that access control configurations remain consistent and secure across devices.
 
 ## Features
 - Read ACL configuration data from local or remote repositories
@@ -11,8 +11,10 @@ The deploy role will read the ACL facts from the provided/default or remote inve
 
 ## Variables
 
-Variable NameDefault ValueRequiredTypeDescriptionExampleansible_network_os""nostrNetwork OS to be used during deploy."cisco.ios.ios"data_store""yesdictDefines the source of the configurations (local or remote).See usage example below.
-
+| Variable Name        | Default Value | Required | Type | Description                                                   |          Example         |
+|:---------------------|:-------------:|:--------:|:----:|:------------------------------------------------------------- |:------------------------:|
+| `ansible_network_os` | `""`          | no       | str  | Network OS to be used during deploy.                          | `"cisco.ios.ios"`        |
+| `data_store`         | `""`          | yes      | dict | Defines the source of the configurations (local or remote).   | See usage example below. |
 
 ## Usage
 Below is an example playbook demonstrating how to use the deploy role to retrieve and deploy ACL configurations from a specified repository:
@@ -40,7 +42,7 @@ When the playbook is executed successfully, the output will show the ACL configu
 
 ## License
 GNU General Public License v3.0 or later.
-See LICENSE to see the full text.
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
 
 ## Author Information
 - Ansible Network Content Team

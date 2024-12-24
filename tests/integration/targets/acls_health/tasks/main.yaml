@@ -1,0 +1,25 @@
+---
+- name: Debug
+  ansible.builtin.debug:
+    msg: "START network.acls health_check role integration tests on connection={{ ansible_connection }}"
+
+- name: Perform health check on ACL configurations
+  block:
+    - name: Run network.acls validated content with health_checks operation
+      ansible.builtin.include_role:
+        name: network.acls.health_checks
+      vars:
+        acl_health_check:
+          name: health_check
+          vars:
+            details: true
+            checks:
+              - name: available_acls
+              - name: missing_acls
+              - name: unassigned_acls
+              - name: interface_acl_status
+      register: acls_result
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "END network.acls health_check role integration tests on connection={{ ansible_connection }}"

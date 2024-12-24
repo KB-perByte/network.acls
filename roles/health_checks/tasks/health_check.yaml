@@ -5,7 +5,7 @@
     network_os: "{{ ansible_network_os.split('.')[2] }}"
 
 - name: Include tasks
-  ansible.builtin.include_tasks: "{{ network_os }}.yaml"
+  ansible.builtin.include_tasks: "{{ ansible_network_os.split('.')[2] }}.yaml"
 
 - name: Set health checks fact
   ansible.builtin.set_fact:

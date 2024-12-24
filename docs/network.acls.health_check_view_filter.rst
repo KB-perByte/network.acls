@@ -138,7 +138,7 @@ Examples
       tasks:
         - name: ACLs health check via ACLs Manager
           ansible.builtin.include_role:
-            name: network.acls.run
+            name: network.acls.health
           vars:
             actions:
               - name: health_check
