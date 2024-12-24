@@ -35,8 +35,6 @@
       ansible.builtin.include_role:
         name: network.acls.remediate
       vars:
-        operations:
-          - name: remediate
         data_store: "{{ test_data_store }}"
       register: remediate_result
 

@@ -60,8 +60,6 @@ This platform-agnostic role enables the user to perform acls health checks. User
        `unassigned_acls`
 - This role enables users to create a runtime brownfield inventory with all the acls configurations regarding host vars. These host vars are ansible facts gathered through the *_acls and *_acl_interfaces network resource modules. The tasks offered by this role can be observed below:
 
-
-
 ### Perform acls Health Checks
 - Health Checks operation fetches the current status of acls configuration health.
 - This can also include the details about the acls available, missing (not configured), and unassigned acls.
