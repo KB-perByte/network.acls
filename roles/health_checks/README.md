@@ -1,5 +1,5 @@
 # Health Checks
-The role enables user to manage the ACL resources independent of platforms and perform ACL health checks.
+The role allows users to perform platform-independent Access Control List (ACL) health checks, ensuring consistent and reliable validation across various networking environments.
 
 ## Capabilities
 
