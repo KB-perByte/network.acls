@@ -12,7 +12,7 @@ The `persist` role enables users to fetch facts for ACL configurations and store
 
 | Variable Name        | Default Value | Required | Type | Description                                                   |          Example         |
 |:---------------------|:-------------:|:--------:|:----:|:------------------------------------------------------------- |:------------------------:|
-| `ansible_network_os` | `""`          | no       | str  | Network OS for which the ACL facts are being gathered.        |   `"cisco.ios.ios"`      |
+| `ansible_network_os` | `""`          | no       | str  | Network OS for which the ACL facts are being persisted.        |   `"cisco.ios.ios"`      |
 | `data_store`         | `""`          | yes      | dict | Specifies the storage configuration (local or SCM).           | See usage example below. |
 
 ## Usage
