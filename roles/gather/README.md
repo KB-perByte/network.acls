@@ -30,7 +30,7 @@ Below is an example playbook demonstrating how to use the `gather` role to colle
         ansible_network_os: cisco.ios.ios
 ```
 Example Output
-When the playbook is executed successfully, the output will display the structured facts for the specified resources.
+When the playbook is executed successfully, the output will display the structured facts for the ACL resources.
 
 ## License
 GNU General Public License v3.0 or later.
