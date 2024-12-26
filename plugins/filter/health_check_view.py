@@ -185,7 +185,6 @@ def health_check_view(*args, **kwargs):
 
     if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
         acls = list(acls_facts.get("acls_data", {}).keys())
-        print(acls)
         for intf, intf_details in acls_facts.get("interface_data").items():
             for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
                 if intf_details.get(direction):
