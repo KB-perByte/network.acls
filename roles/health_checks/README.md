@@ -17,7 +17,7 @@ This role enables users to create a runtime brownfield inventory with all the AC
 
 | Variable Name        | Default Value | Required | Type | Description                                                  |       Example       |
 |:---------------------|:-------------:|:--------:|:----:|:-------------------------------------------------------------|:-------------------:|
-| `ansible_network_os` | `""`          | no       | str  | Network OS to be used during detection.                      | `"cisco.ios.ios"`   |
+| `ansible_network_os` | `""`          | no       | str  | Network OS to be used while performing health-checks.                      | `"cisco.ios.ios"`   |
 
 ### Perform ACL Health Checks
 - Health Checks operation verifies the current status of ACL configurations and their assignments.
