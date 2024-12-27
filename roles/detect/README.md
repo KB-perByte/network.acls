@@ -13,7 +13,7 @@ The `detect` role will read the ACL facts from the local provided/default invent
 | Variable Name        | Default Value | Required | Type | Description                                                   |         Example          |
 |:---------------------|:-------------:|:--------:|:----:|:------------------------------------------------------------- |:------------------------:|
 | `ansible_network_os` | `""`          | no       | str  | Network OS to be used during detect.                          |    `"cisco.ios.ios"`     |
-| `data_store`         | `""`          | yes      | dict | DSpecifies the data store to be used (local or SCM).          | See usage example below. |
+| `data_store`         | `""`          | yes      | dict | Specifies the data store to be used (local or SCM).          | See usage example below. |
 
 ## Usage
 Below are examples demonstrating how to use the `detect` role:
