@@ -1,0 +1,25 @@
+---
+- name: Debug
+  ansible.builtin.debug:
+    msg: "START network.acls gather role integration tests on connection={{ ansible_connection }}"
+
+- name: Gather and assertion
+  block:
+    - name: Run gather role to retrieve structured facts
+      ansible.builtin.include_role:
+        name: network.acls.gather
+      vars:
+        resources:
+          - "acls"
+          - "acl_interfaces"
+      register: gather_result
+
+    - name: Assert that gather result
+      ansible.builtin.assert:
+        that:
+          - gather_result is defined
+          - gather_result.changed == false
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "END network.acls gather role integration tests on connection={{ ansible_connection }}"

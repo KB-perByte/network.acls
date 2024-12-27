@@ -1,0 +1,8 @@
+---
+- name: Invoke persist function
+  ansible.builtin.include_role:
+    name: network.base.persist
+  vars:
+    resources:
+      - "acl_interfaces"
+      - "acls"

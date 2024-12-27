@@ -93,7 +93,7 @@ EXAMPLES = r"""
   tasks:
     - name: ACLs health check via ACLs Manager
       ansible.builtin.include_role:
-        name: network.acls.run
+        name: network.acls.health
       vars:
         actions:
           - name: health_check
@@ -177,18 +177,22 @@ def health_check_view(*args, **kwargs):
     }
     present_not_configured_acl = []
     configured_acls = []
+    def clean_acl_id(acl_id):
+        """Clean ACL ID by removing backticks and converting to string"""
+        if isinstance(acl_id, (int, str)):
+            return str(acl_id).replace('`', '')
+        return acl_id
+
     if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
         acls = list(acls_facts.get("acls_data", {}).keys())
-
         for intf, intf_details in acls_facts.get("interface_data").items():
             for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
                 if intf_details.get(direction):
-                    if intf_details.get(direction) not in acls:
+                    acl_id = clean_acl_id(intf_details.get(direction))
+                    if acl_id not in acls:
                         present_not_configured_acl.append(intf_details.get(direction))
-                    configured_acls.append(intf_details.get(direction))
-                    intf_details[direction] = acls_facts.get("acls_data", {}).get(
-                        intf_details.get(direction)
-                    )
+                    configured_acls.append(acl_id)
+                    intf_details[direction] = acls_facts.get("acls_data", {}).get(acl_id)
             details["details"][intf] = intf_details
     details["available_acls"] = acls
     details["missing_acls"] = present_not_configured_acl
