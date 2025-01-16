@@ -177,6 +177,7 @@ def health_check_view(*args, **kwargs):
     }
     present_not_configured_acl = []
     configured_acls = []
+
     def clean_acl_id(acl_id):
         """Clean ACL ID by removing backticks and converting to string"""
         if isinstance(acl_id, (int, str)):
@@ -185,7 +186,9 @@ def health_check_view(*args, **kwargs):
 
     if acls_facts.get("interface_data") or acls_facts.get("acls_data"):
         acls = list(acls_facts.get("acls_data", {}).keys())
+
         for intf, intf_details in acls_facts.get("interface_data").items():
+
             for direction in ["inbound_v4", "outbound_v4", "inbound_v6", "outbound_v6"]:
                 if intf_details.get(direction):
                     acl_id = clean_acl_id(intf_details.get(direction))

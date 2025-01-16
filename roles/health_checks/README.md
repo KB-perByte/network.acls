@@ -10,7 +10,7 @@ The role allows users to perform platform-independent Access Control List (ACL) 
   - `missing_acls`: Identifies ACLs referenced in interfaces but not defined.
   - `unassigned_acls`: Shows ACLs that are defined but not used on any interface.
   - `interface_acl_status`: Shows the status of ACL assignments on interfaces.
-    
+
 ## Variables
 
 | Variable Name        | Default Value | Required | Type | Description                                                  |       Example       |
