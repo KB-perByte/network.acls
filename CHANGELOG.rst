@@ -4,6 +4,14 @@ Network Acls Collection Release Notes
 
 .. contents:: Topics
 
+v4.0.0
+======
+
+Major Changes
+-------------
+
+- Restructured the network.acls collection by converting supported operations into separate roles.
+
 v3.0.0
 ======
 
